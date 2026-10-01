@@ -8,7 +8,7 @@ Everything runs on your own computer. There is no account, no cloud service, and
 
 **[Download Tensile](https://shubhamsingh047.github.io/tensile/)** for macOS (Apple chip and Intel), Windows and Linux.
 
-![Tensile searching for the breaking point of an API](assets/breaking-point-live.png)
+![Response times while Tensile raises the traffic step by step and finds the breaking point](assets/shots/breaking-point-chart.png)
 
 ## Download
 
@@ -35,7 +35,7 @@ Prefer a file? [Apple chip .zip](https://github.com/ShubhamSingh047/tensile/rele
 
 ### Send and check requests
 
-![A request, its response and its tests](assets/request.png)
+![A request answered with status 200 and three passing tests](assets/shots/request.png)
 
 - Build requests with any method, headers and body, and see the status, headers, formatted JSON and a timing breakdown: DNS, connect, TLS, server wait and download.
 - Add **tests** to a request (status code, body text, JSON fields, headers, response time) that turn green or red every time you send it.
@@ -45,7 +45,9 @@ Prefer a file? [Apple chip .zip](https://github.com/ShubhamSingh047/tensile/rele
 
 ### Load test
 
-![A finished load test with live charts and a plain-language summary](assets/load-test.png)
+![Load test settings: virtual users, duration and load profile](assets/shots/setup.png)
+
+![A finished load test, explained in plain words](assets/shots/result.png)
 
 - Choose how many **virtual users**, for how long, and a **load profile**: fixed, ramp up, spike or peak.
 - Set **pass criteria** such as `p95 < 500 ms` or `error rate < 1%`. They go green or red live while the test runs.
@@ -55,13 +57,13 @@ Prefer a file? [Apple chip .zip](https://github.com/ShubhamSingh047/tensile/rele
 
 ### Find the breaking point
 
-![The result of a breaking-point search](assets/breaking-point-result.png)
+![Breaking point between 420 and 430 requests per second, explained in plain words](assets/shots/breaking-point.png)
 
 Tensile raises the traffic step by step until your limits are crossed, then narrows in. You get a clear answer such as "your API copes with between 180 and 190 requests per second", a table of what each step did, and the reason it failed: too slow, or too many errors.
 
 ### Test MCP servers
 
-![MCP security checks flagging a hidden instruction in a tool description](assets/mcp-security-checks.png)
+![MCP security checks flagging a hidden instruction in a tool description](assets/shots/mcp.png)
 
 Connect to an MCP server over HTTP or as a local command, list its tools and call them. Tensile checks tool descriptions for hidden instructions aimed at the AI, looks for exposed credentials, and can load-test tool calls. A built-in practice server lets you try it with one click.
 

@@ -63,7 +63,40 @@
   .btn:focus-visible, .tab:focus-visible, .card a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .btn svg { width: 16px; height: 16px; }
   .hint { font-size: 13px; color: var(--muted); }
-  .shot { width: 100%; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 18px 50px -24px rgba(0,0,0,.35); background: var(--panel); display: block; }
+  .frame { border: 1px solid var(--line); border-radius: 6px; background: var(--panel); box-shadow: 0 18px 50px -28px rgba(0,0,0,.35); overflow: hidden; }
+  .frame .bar { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-bottom: 1px solid var(--line); background: var(--panel-2); }
+  .frame .bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
+  .frame .bar span { margin-left: 8px; font: 11.5px var(--mono); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .frame .scroll { overflow-x: auto; }
+  .frame img { display: block; width: 100%; height: auto; }
+  .frame img + img { border-top: 1px solid var(--line); }
+  .frame.wide img { min-width: 560px; }
+  .swipe { display: none; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  @media (max-width: 600px) { .frame.wide + .swipe { display: block; } }
+  
+  .how { display: grid; gap: 64px; }
+  .step { display: grid; gap: 22px; align-items: center; grid-template-columns: 1fr; }
+  @media (min-width: 880px) {
+    .step { grid-template-columns: 5fr 7fr; gap: 48px; }
+    .step.flip { grid-template-columns: 7fr 5fr; }
+    .step.flip .text { order: 2; }
+    .step.narrow { grid-template-columns: 7fr 5fr; }
+    .step.narrow .frame { max-width: 360px; justify-self: center; width: 100%; }
+  }
+  .step > * { min-width: 0; }
+  .step.full { grid-template-columns: 1fr !important; gap: 20px; }
+  @media (min-width: 880px) {
+    .step.full .text { display: grid; grid-template-columns: 5fr 7fr; gap: 0 48px; align-items: start; }
+    .step.full .text .lead { grid-column: 1; }
+    .step.full .text ul { grid-column: 2; margin-top: 30px; }
+  }
+  .step .num { font: 500 12px var(--mono); color: var(--accent); letter-spacing: .06em; }
+  .step h3 { font-size: 24px; line-height: 1.2; letter-spacing: -0.015em; margin: 6px 0 10px; font-weight: 600; }
+  .step p { margin: 0 0 12px; color: var(--muted); }
+  .step ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
+  .step li { margin: 4px 0; }
+  .step strong { color: var(--fg); font-weight: 500; }
+  .demo-note { margin-top: 40px; font-size: 13px; color: var(--muted); }
 
   section { padding: 36px 0; }
   h2 { font-size: 13px; font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 16px; }
@@ -135,8 +168,98 @@
         <span class="hint" id="primary-hint">Free for macOS, Windows and Linux</span>
       </div>
     </div>
-    <img class="shot" src="assets/screenshot.png" alt="Tensile running a load test, with live response times and error rate">
+    <figure class="frame" style="margin:0">
+      <div class="bar" aria-hidden="true"><i></i><i></i><i></i><span>Find breaking point &middot; GET /users</span></div>
+      <img src="assets/shots/breaking-point-chart.png" width="1400" height="562" alt="Chart of response times while Tensile raises the traffic step by step: under the 250 ms limit up to 320 requests per second, then over it at 640, settling on a breaking point between 420 and 430">
+    </figure>
   </div>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <div class="how">
+
+      <div class="step full">
+        <div class="text">
+          <div class="lead">
+          <span class="num">STEP 1</span>
+          <h3>Send a request and check the answer</h3>
+          <p>Paste a URL and press Send, like in Postman. Tensile shows the status, how long it took and how big the answer was.</p>
+          </div>
+          <ul>
+            <li>Add <strong>tests</strong> once, such as "status is 2xx" or "this JSON field exists". They turn green or red on every send.</li>
+            <li>Every method is explained in plain words, so you know what is safe to load-test.</li>
+          </ul>
+        </div>
+        <div>
+          <figure class="frame wide" style="margin:0"><div class="scroll"><img src="assets/shots/request.png" width="2032" height="520" loading="lazy" alt="A GET request to /users answered with status 200 in 42 ms, and three tests passing"></div></figure>
+          <p class="swipe">Swipe to see the whole screen.</p>
+        </div>
+      </div>
+
+      <div class="step narrow flip">
+        <div class="text">
+          <span class="num">STEP 2</span>
+          <h3>Choose how much traffic to send</h3>
+          <p>Pick how many <strong>virtual users</strong> (simulated people sending requests) and for how long. Then choose the shape of the traffic:</p>
+          <ul>
+            <li><strong>Fixed</strong> for steady load, <strong>Ramp up</strong> to add users gradually.</li>
+            <li><strong>Spike</strong> for a sudden rush, <strong>Peak</strong> for a busy hour that comes and goes.</li>
+            <li>Set your limits, such as "slowest 5% under 500 ms" or "under 1% errors".</li>
+          </ul>
+        </div>
+        <figure class="frame" style="margin:0"><img src="assets/shots/setup.png" width="636" height="508" loading="lazy" alt="Load test settings: 10 virtual users for 6 seconds with the Ramp up profile selected"></figure>
+      </div>
+
+      <div class="step">
+        <div class="text">
+          <span class="num">STEP 3</span>
+          <h3>Read the result in plain words</h3>
+          <p>No guessing what the numbers mean. Tensile tells you how much traffic your API handled, how long people waited, and whether it stayed inside your limits.</p>
+          <ul>
+            <li>Each limit shows <strong>pass</strong> or <strong>fail</strong>, live while the test runs.</li>
+            <li>Every number comes with a short explanation, like "95% were faster".</li>
+          </ul>
+        </div>
+        <figure class="frame" style="margin:0">
+          <img src="assets/shots/result.png" width="1400" height="620" loading="lazy" alt="Result: passed every criterion. In plain words, the API answered 860 requests per second, a typical request took 78 ms, and every request got a good answer">
+          <img src="assets/shots/metrics.png" width="1400" height="388" loading="lazy" alt="Measurements: 860 requests, 85 ms average, p95 141 ms, 0% errors, each with a short explanation">
+        </figure>
+      </div>
+
+      <div class="step flip">
+        <div class="text">
+          <span class="num">STEP 4</span>
+          <h3>Find the exact point where it breaks</h3>
+          <p>Tensile doubles the traffic until your API goes over your limits, then narrows in. You get one clear number, why it broke, and how to plan.</p>
+          <ul>
+            <li>See whether it broke because answers got <strong>too slow</strong> or because requests started <strong>failing</strong>.</li>
+            <li>A table shows what happened at every step.</li>
+          </ul>
+        </div>
+        <figure class="frame" style="margin:0"><img src="assets/shots/breaking-point.png" width="1400" height="524" loading="lazy" alt="Breaking point between 420 and 430 requests per second. At 430 the slowest 5% waited 340 ms, over the 250 ms limit"></figure>
+      </div>
+
+      <div class="step full">
+        <div class="text">
+          <div class="lead">
+          <span class="num">STEP 5</span>
+          <h3>Check the MCP servers your AI tools use</h3>
+          <p>MCP servers give AI assistants their tools. Tensile connects, lists every tool and checks what the server tells the AI.</p>
+          </div>
+          <ul>
+            <li>Flags <strong>hidden instructions</strong> in tool descriptions, such as asking the AI to read your SSH keys.</li>
+            <li>Checks how the server accepts connections, and can load-test its tools.</li>
+          </ul>
+        </div>
+        <div>
+          <figure class="frame wide" style="margin:0"><div class="scroll"><img src="assets/shots/mcp.png" width="2032" height="824" loading="lazy" alt="MCP security checks: high risk, hidden instructions in the get_weather tool description; medium, accepts requests from any website; pass, refuses requests without credentials"></div></figure>
+          <p class="swipe">Swipe to see the whole screen.</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="demo-note">Screenshots use Tensile's built-in demo data. Everything runs on your own computer; there is no account and nothing is sent anywhere else.</p>
+  </section>
 
   <section id="downloads">
     <h2>Downloads</h2>
