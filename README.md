@@ -1,22 +1,114 @@
 # Tensile
 
-Find the traffic where your API breaks. Send requests like Postman, then load-test them and see response times, error rates and the point where your server starts failing.
+**Find the traffic where your API breaks, and why.**
 
-**Download:** https://shubhamsingh047.github.io/tensile/
+Tensile is a desktop app for testing APIs. Send requests the way you would in Postman, then put them under load: simulate many users at once, watch response times and errors live, and find the exact request rate where your server stops coping. It also tests MCP servers, the tool servers that AI assistants connect to.
+
+Everything runs on your own computer. There is no account, no cloud service, and your requests and results never leave your machine.
+
+**[Download Tensile](https://shubhamsingh047.github.io/tensile/)** for macOS (Apple chip and Intel), Windows and Linux.
+
+![Tensile searching for the breaking point of an API](assets/breaking-point-live.png)
+
+## Download
 
 | System | File |
 | --- | --- |
 | Mac with Apple chip (M1 and newer) | [Tensile-macos-arm64.zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-arm64.zip) |
 | Mac with Intel chip | [Tensile-macos-x64.zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-x64.zip) |
-| Windows 10/11, 64-bit | [Tensile-windows-x64-setup.exe](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-windows-x64-setup.exe) |
-| Linux, 64-bit | [Tensile-linux-x64.AppImage](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-linux-x64.AppImage) |
+| Windows 10 and 11, 64-bit | [Tensile-windows-x64-setup.exe](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-windows-x64-setup.exe) |
+| Linux, 64-bit (AppImage) | [Tensile-linux-x64.AppImage](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-linux-x64.AppImage) |
 
-Or on macOS and Linux:
+Not sure which Mac you have? Open the Apple menu, then **About This Mac**. "Chip: Apple M…" means Apple chip; "Processor: … Intel" means Intel.
+
+On macOS and Linux you can also install from the terminal:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh
 ```
 
-Builds are not code-signed yet. On macOS, right-click the app and choose Open the first time; on Windows, click More info, then Run anyway.
+The script installs the app and the `tensile` command-line tool, verifies every file against the release's `SHA256SUMS`, and never uses `sudo`. [Read it first](install.sh) if you like.
 
-This repository holds the download page and release files only.
+## What you can do with it
+
+### Send and check requests
+
+![A request, its response and its tests](assets/request.png)
+
+- Build requests with any method, headers and body, and see the status, headers, formatted JSON and a timing breakdown: DNS, connect, TLS, server wait and download.
+- Add **tests** to a request (status code, body text, JSON fields, headers, response time) that turn green or red every time you send it.
+- Organise requests into **collections**, stored as plain JSON files in a folder you choose, so they fit in git.
+- **Import an OpenAPI or Swagger spec** (JSON or YAML, file or URL) to get every endpoint as a ready-made request.
+- Use **environments** and variables such as `{{baseUrl}}` and `{{token}}`. Secret values are kept in your operating system's keychain, never in files.
+
+### Load test
+
+![A finished load test with live charts and a plain-language summary](assets/load-test.png)
+
+- Choose how many **virtual users**, for how long, and a **load profile**: fixed, ramp up, spike or peak.
+- Set **pass criteria** such as `p95 < 500 ms` or `error rate < 1%`. They go green or red live while the test runs.
+- Read the results in plain words: requests per second, typical and worst-case response times (p50, p90, p95, p99), errors kept separate from unexpected status codes, and every number explained.
+- **Run a whole collection** as a user journey: each virtual user sends the requests in order, and results break down per request.
+- **Data runs:** send one request once per value in a list you provide (for example, a set of tricky inputs) and get a pass/fail table.
+
+### Find the breaking point
+
+![The result of a breaking-point search](assets/breaking-point-result.png)
+
+Tensile raises the traffic step by step until your limits are crossed, then narrows in. You get a clear answer such as "your API copes with between 180 and 190 requests per second", a table of what each step did, and the reason it failed: too slow, or too many errors.
+
+### Test MCP servers
+
+![MCP security checks flagging a hidden instruction in a tool description](assets/mcp-security-checks.png)
+
+Connect to an MCP server over HTTP or as a local command, list its tools and call them. Tensile checks tool descriptions for hidden instructions aimed at the AI, looks for exposed credentials, and can load-test tool calls. A built-in practice server lets you try it with one click.
+
+### History and comparison
+
+Every request and load test is saved. Pick two runs to compare every metric side by side, with changes marked better, worse or unchanged.
+
+## Command-line tool
+
+The `tensile` command runs the same engine from a terminal or a CI pipeline.
+
+```sh
+# 50 connections for 30 seconds
+tensile bench http://localhost:3000/users -c 50 -d 30s
+
+# Find the highest rate that keeps p95 under 250 ms and errors under 1%
+tensile capacity http://localhost:3000/users --p95 250ms --max-error-rate 1%
+
+# CI gate: fail unless 500 requests/s is sustainable, and save the evidence
+tensile capacity https://staging.example.com/api --authorized \
+  --p95 250ms --require 500 --json capacity.json
+```
+
+Install only the command-line tool with `curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh -s -- --cli`. On Windows, download [tensile-windows-x64.zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/tensile-windows-x64.zip) and put `tensile.exe` on your `PATH`.
+
+## First launch
+
+Tensile is not code-signed yet, so your system asks once before opening it.
+
+- **macOS:** drag Tensile into Applications, then right-click it and choose **Open**. If macOS says the app can't be opened, go to **System Settings, Privacy & Security** and click **Open Anyway**. Installing with the terminal command above skips this.
+- **Windows:** if you see "Windows protected your PC", click **More info**, then **Run anyway**.
+- **Linux:** make the file executable with `chmod +x Tensile-linux-x64.AppImage`, then run it.
+
+## Use it responsibly
+
+Only load-test systems you own or have permission to test. Heavy traffic can slow down or take down a real service. Tensile asks you to confirm before it sends load to any address other than your own computer, and you can stop any run at any time.
+
+## Updating and uninstalling
+
+Download the latest version from the [download page](https://shubhamsingh047.github.io/tensile/) and replace the old app, or run the install command again. To remove everything the install script added:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh -s -- --uninstall
+```
+
+## Support
+
+Found a bug or have an idea? [Open an issue](https://github.com/ShubhamSingh047/tensile/issues). Every release and its checksums are listed on the [releases page](https://github.com/ShubhamSingh047/tensile/releases).
+
+---
+
+Screenshots use the app's demo data, so the numbers are examples. This repository hosts the download page and release files for Tensile.
