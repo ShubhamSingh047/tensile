@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Download Tensile</title>
+<meta name="description" content="Tensile shows at what traffic your API breaks, and why. Download for macOS, Windows and Linux.">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2efe9; --panel: #fbfaf7; --panel-2: #ebe7df; --line: #d8d2c7;
+    --fg: #17181a; --muted: #6f6a61; --accent: #ff4f1a; --accent-fg: #ffffff;
+    --grid: rgba(23, 24, 26, 0.045);
+    --sans: "IBM Plex Sans", -apple-system, system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111214; --panel: #17191c; --panel-2: #1f2226; --line: #2c2f35;
+      --fg: #e9e6e0; --muted: #8d887f; --accent: #ff6a36; --accent-fg: #111214;
+      --grid: rgba(233, 230, 224, 0.035);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #111214; --panel: #17191c; --panel-2: #1f2226; --line: #2c2f35;
+    --fg: #e9e6e0; --muted: #8d887f; --accent: #ff6a36; --accent-fg: #111214;
+    --grid: rgba(233, 230, 224, 0.035);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  a { color: inherit; }
+  code, .mono { font-family: var(--mono); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; }
+  .wordmark { display: inline-flex; align-items: center; gap: 8px; font: 600 18px var(--mono); letter-spacing: -0.02em; text-decoration: none; }
+  .wordmark svg { width: 24px; height: 24px; }
+  .version { font: 12px var(--mono); color: var(--muted); border: 1px solid var(--line); padding: 3px 8px; border-radius: 2px; background: var(--panel); }
+
+  .hero { padding: 40px 0 28px; display: grid; gap: 32px; grid-template-columns: 1fr; align-items: center; }
+  @media (min-width: 880px) { .hero { grid-template-columns: 1fr 1.15fr; padding-top: 56px; } }
+  h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.08; letter-spacing: -0.025em; margin: 0 0 14px; font-weight: 600; }
+  .lede { color: var(--muted); font-size: 17px; margin: 0 0 24px; max-width: 34em; }
+  .primary { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer;
+    font: 500 15px var(--sans); padding: 11px 18px; border-radius: 3px; border: 1px solid var(--fg);
+    background: var(--fg); color: var(--bg);
+  }
+  .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+  .btn:focus-visible, .tab:focus-visible, .card a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .btn svg { width: 16px; height: 16px; }
+  .hint { font-size: 13px; color: var(--muted); }
+  .shot { width: 100%; border: 1px solid var(--line); border-radius: 4px; box-shadow: 0 18px 50px -24px rgba(0,0,0,.35); background: var(--panel); display: block; }
+
+  section { padding: 36px 0; }
+  h2 { font-size: 13px; font-family: var(--mono); font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 16px; }
+
+  .cards { display: grid; gap: 12px; grid-template-columns: 1fr; }
+  @media (min-width: 620px) { .cards { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 980px) { .cards { grid-template-columns: repeat(4, 1fr); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .card.match { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .card .tag { position: absolute; top: -10px; left: 14px; background: var(--accent); color: var(--accent-fg); font: 500 11px var(--mono); padding: 2px 7px; border-radius: 2px; display: none; }
+  .card.match .tag { display: block; }
+  .card h3 { margin: 0; font-size: 16px; font-weight: 600; }
+  .card .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+  .card .file { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); word-break: break-all; }
+  .card a.dl { display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; font-weight: 500; font-size: 14px; padding: 9px 12px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel-2); margin-top: 10px; }
+  .card a.dl:hover { border-color: var(--accent); color: var(--accent); }
+  .card a.dl svg { width: 14px; height: 14px; }
+
+  .which { margin-top: 14px; font-size: 13.5px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 3px; }
+  .which strong { color: var(--fg); font-weight: 500; }
+
+  .tabs { display: inline-flex; border: 1px solid var(--line); border-radius: 3px; overflow: hidden; background: var(--panel); margin-bottom: 14px; flex-wrap: wrap; }
+  .tab { font: 500 13.5px var(--sans); padding: 8px 14px; border: 0; background: transparent; color: var(--muted); cursor: pointer; border-right: 1px solid var(--line); }
+  .tab:last-child { border-right: 0; }
+  .tab[aria-selected="true"] { background: var(--fg); color: var(--bg); }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 6px 22px; }
+  .panel[hidden] { display: none; }
+  .panel ol { padding-left: 20px; margin: 14px 0; }
+  .panel li { margin: 8px 0; }
+  .panel p { margin: 12px 0; }
+  .note { color: var(--muted); font-size: 13.5px; }
+  pre { margin: 8px 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); }
+  .copyrow { display: flex; gap: 8px; align-items: stretch; }
+  .copyrow pre { flex: 1; margin: 0; }
+  .copy { font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--panel); color: var(--fg); border-radius: 3px; padding: 0 12px; cursor: pointer; }
+  .copy:hover { border-color: var(--accent); }
+
+  footer { padding: 28px 0 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="wordmark" href="./" aria-label="Tensile">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 29 L9 13 C10.5 10 13 9 16 9 C19.5 9 21.5 10 23 12.5 L24.5 15.5" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M26.5 13.5 L29.5 18.5 M29.5 13.5 L26.5 18.5" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
+      Tensile
+    </a>
+    <span class="version" id="version">latest release</span>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1>Find the traffic where your API breaks.</h1>
+      <p class="lede">Send requests like Postman, then load-test them: see response times, error rates and the point where your server starts failing, explained in plain words.</p>
+      <div class="primary">
+        <a class="btn" id="primary-btn" href="#downloads">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8M4.5 7.5 8 11l3.5-3.5M3 13.5h10"/></svg>
+          <span id="primary-label">Choose your download</span>
+        </a>
+        <span class="hint" id="primary-hint">Free for macOS, Windows and Linux</span>
+      </div>
+    </div>
+    <img class="shot" src="assets/screenshot.png" alt="Tensile running a load test, with live response times and error rate">
+  </div>
+
+  <section id="downloads">
+    <h2>Downloads</h2>
+    <div class="cards">
+      <div class="card" data-os="mac-arm">
+        <span class="tag">Your computer</span>
+        <h3>Mac with Apple chip</h3>
+        <p class="sub">M1, M2, M3, M4 and newer</p>
+        <span class="file" data-file="Tensile-macos-arm64.zip">Tensile-macos-arm64.zip</span>
+        <a class="dl" data-file="Tensile-macos-arm64.zip" href="#">Download</a>
+      </div>
+      <div class="card" data-os="mac-intel">
+        <span class="tag">Your computer</span>
+        <h3>Mac with Intel chip</h3>
+        <p class="sub">Older Macs with an Intel processor</p>
+        <span class="file" data-file="Tensile-macos-x64.zip">Tensile-macos-x64.zip</span>
+        <a class="dl" data-file="Tensile-macos-x64.zip" href="#">Download</a>
+      </div>
+      <div class="card" data-os="windows">
+        <span class="tag">Your computer</span>
+        <h3>Windows</h3>
+        <p class="sub">Windows 10 and 11, 64-bit</p>
+        <span class="file" data-file="Tensile-windows-x64-setup.exe">Tensile-windows-x64-setup.exe</span>
+        <a class="dl" data-file="Tensile-windows-x64-setup.exe" href="#">Download</a>
+      </div>
+      <div class="card" data-os="linux">
+        <span class="tag">Your computer</span>
+        <h3>Linux</h3>
+        <p class="sub">64-bit, AppImage</p>
+        <span class="file" data-file="Tensile-linux-x64.AppImage">Tensile-linux-x64.AppImage</span>
+        <a class="dl" data-file="Tensile-linux-x64.AppImage" href="#">Download</a>
+      </div>
+    </div>
+    <p class="which"><strong>Which Mac do I have?</strong> Open the Apple menu, then About This Mac. If it says <strong>Chip: Apple M…</strong>, pick Apple chip. If it says <strong>Processor: … Intel</strong>, pick Intel chip.</p>
+  </section>
+
+  <section id="install">
+    <h2>Installing</h2>
+    <div class="tabs" role="tablist" aria-label="Operating system">
+      <button class="tab" role="tab" id="tab-mac" aria-controls="panel-mac" aria-selected="true">macOS</button>
+      <button class="tab" role="tab" id="tab-windows" aria-controls="panel-windows" aria-selected="false" tabindex="-1">Windows</button>
+      <button class="tab" role="tab" id="tab-linux" aria-controls="panel-linux" aria-selected="false" tabindex="-1">Linux</button>
+      <button class="tab" role="tab" id="tab-cli" aria-controls="panel-cli" aria-selected="false" tabindex="-1">Command line</button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-mac" aria-labelledby="tab-mac">
+      <ol>
+        <li>Open the downloaded <code>.zip</code>. It unpacks to <strong>Tensile</strong>.</li>
+        <li>Drag <strong>Tensile</strong> into your <strong>Applications</strong> folder.</li>
+        <li>The first time only: right-click Tensile, choose <strong>Open</strong>, then <strong>Open</strong> again.</li>
+      </ol>
+      <p class="note">Tensile is not signed with an Apple developer certificate yet, so macOS asks before the first launch. If it says the app "can't be opened" or "is damaged", go to <strong>System Settings, Privacy &amp; Security</strong> and click <strong>Open Anyway</strong>, or run this once in Terminal:</p>
+      <div class="copyrow"><pre><code>xattr -dr com.apple.quarantine /Applications/Tensile.app</code></pre><button class="copy" type="button">Copy</button></div>
+      <p class="note">Or install with one Terminal command, which skips these prompts:</p>
+      <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" hidden>
+      <ol>
+        <li>Run <code>Tensile-windows-x64-setup.exe</code>.</li>
+        <li>If Windows shows "Windows protected your PC", click <strong>More info</strong>, then <strong>Run anyway</strong>.</li>
+        <li>Follow the installer. Tensile appears in the Start menu.</li>
+      </ol>
+      <p class="note">The warning appears because the installer is not code-signed yet.</p>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-linux" aria-labelledby="tab-linux" hidden>
+      <ol>
+        <li>Make the file runnable, then start it:</li>
+      </ol>
+      <div class="copyrow"><pre><code>chmod +x Tensile-linux-x64.AppImage &amp;&amp; ./Tensile-linux-x64.AppImage</code></pre><button class="copy" type="button">Copy</button></div>
+      <p class="note">Or install the app and the <code>tensile</code> command with:</p>
+      <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="panel-cli" aria-labelledby="tab-cli" hidden>
+      <p>The <code>tensile</code> command runs the same load tests from a terminal or CI. On macOS and Linux:</p>
+      <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh -s -- --cli</code></pre><button class="copy" type="button">Copy</button></div>
+      <p class="note">On Windows, download <a href="#" data-file="tensile-windows-x64.zip">tensile-windows-x64.zip</a> and put <code>tensile.exe</code> on your PATH. Every file is listed with its checksum on the <a href="https://github.com/ShubhamSingh047/tensile/releases/latest">release page</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Tensile &middot; <span id="footer-version">latest release</span></span>
+    <span><a href="https://github.com/ShubhamSingh047/tensile/releases">All releases and checksums</a></span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var REPO = "ShubhamSingh047/tensile";
+  var latest = "https://github.com/" + REPO + "/releases/latest/download/";
+
+  // Links work even if the GitHub API call below fails: /latest/download/<name> always redirects.
+  document.querySelectorAll("a[data-file]").forEach(function (a) { a.href = latest + a.dataset.file; });
+
+  function mb(bytes) { return (bytes / 1048576).toFixed(bytes < 10485760 ? 1 : 0) + " MB"; }
+
+  fetch("https://api.github.com/repos/" + REPO + "/releases/latest")
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (rel) {
+      if (!rel) return;
+      var v = rel.tag_name + (rel.published_at ? " · " + new Date(rel.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "");
+      document.getElementById("version").textContent = v;
+      document.getElementById("footer-version").textContent = v;
+      var sizes = {};
+      (rel.assets || []).forEach(function (a) { sizes[a.name] = a.size; });
+      document.querySelectorAll(".file[data-file]").forEach(function (el) {
+        var s = sizes[el.dataset.file];
+        if (s) el.textContent = el.dataset.file + " · " + mb(s);
+      });
+    })
+    .catch(function () {});
+
+  // Pick the visitor's platform. Browsers don't reliably say which Mac chip is inside,
+  // so only Chromium's architecture hint is trusted; otherwise both Mac cards stay equal.
+  function mark(os) {
+    var card = document.querySelector('.card[data-os="' + os + '"]');
+    if (!card) return;
+    card.classList.add("match");
+    var a = card.querySelector("a.dl");
+    document.getElementById("primary-btn").href = a.href;
+    document.getElementById("primary-label").textContent = "Download for " + card.querySelector("h3").textContent;
+    document.getElementById("primary-hint").textContent = card.querySelector(".file").dataset.file;
+  }
+  function showTab(name) {
+    document.querySelectorAll(".tab").forEach(function (t) {
+      var on = t.id === "tab-" + name;
+      t.setAttribute("aria-selected", on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+  }
+
+  var ua = navigator.userAgent, plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+  var isMac = /Mac/i.test(plat) && !/iPhone|iPad/i.test(ua) && navigator.maxTouchPoints < 2;
+  if (/Win/i.test(plat)) { mark("windows"); showTab("windows"); }
+  else if (/Linux/i.test(plat) && !/Android/i.test(ua)) { mark("linux"); showTab("linux"); }
+  else if (isMac) {
+    showTab("mac");
+    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+      navigator.userAgentData.getHighEntropyValues(["architecture"]).then(function (h) {
+        if (h.architecture === "arm") mark("mac-arm");
+        else if (h.architecture === "x86") mark("mac-intel");
+        else document.getElementById("primary-hint").textContent = "Pick Apple chip or Intel chip below";
+      }).catch(function () {});
+    } else {
+      document.getElementById("primary-hint").textContent = "Pick Apple chip or Intel chip below";
+    }
+  }
+
+  // Tabs: click and arrow keys.
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { showTab(t.id.slice(4)); });
+    t.addEventListener("keydown", function (e) {
+      var d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      var n = tabs[(i + d + tabs.length) % tabs.length];
+      showTab(n.id.slice(4)); n.focus();
+    });
+  });
+
+  document.querySelectorAll(".copy").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var text = b.parentNode.querySelector("code").textContent;
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(text).then(function () {
+        b.textContent = "Copied";
+        setTimeout(function () { b.textContent = "Copy"; }, 1500);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>
