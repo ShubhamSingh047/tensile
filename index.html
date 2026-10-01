@@ -125,8 +125,9 @@
   .steps li { margin: 4px 0; }
   .card .alt { font-size: 13px; color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); }
   .card .alt a { color: var(--fg); }
-  .card a.dl { display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; font-weight: 500; font-size: 14px; padding: 9px 12px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel-2); margin-top: 10px; }
-  .card a.dl:hover { border-color: var(--accent); color: var(--accent); }
+  .card a.dl { display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; font-weight: 600; font-size: 15px; padding: 12px 14px; border-radius: 3px; border: 1px solid var(--fg); background: var(--fg); color: var(--bg); margin-top: 12px; }
+  .card a.dl:hover, .card.match a.dl { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+  .card.match a.dl:hover { filter: brightness(1.08); }
   .card a.dl svg { width: 14px; height: 14px; }
 
   .which { margin-top: 14px; font-size: 13.5px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: 10px 14px; border-radius: 3px; }
@@ -145,8 +146,11 @@
   pre { margin: 8px 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); }
   .copyrow { display: flex; gap: 8px; align-items: stretch; }
   .copyrow pre { flex: 1; margin: 0; min-width: 0; }
-  .copy { font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--panel); color: var(--fg); border-radius: 3px; padding: 0 12px; cursor: pointer; }
-  .copy:hover { border-color: var(--accent); }
+  .copy { font: 600 13px var(--sans); border: 1px solid var(--fg); background: var(--fg); color: var(--bg); border-radius: 3px; padding: 0 16px; cursor: pointer; white-space: nowrap; }
+  .copy:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+  .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .copy.done { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+  .card.mac .copy { font-size: 14px; padding: 0 20px; }
 
   footer { padding: 28px 0 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
 </style>
@@ -296,22 +300,21 @@
           <li>Open <strong>Terminal</strong>: press Command-Space, type Terminal, press Return.</li>
           <li>Paste this and press Return. Tensile installs and opens, with no security warning.</li>
         </ol>
-        <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
-        <p class="alt">Prefer a file? <a href="#" data-file="Tensile-macos-arm64.zip">Apple chip .zip</a> (M1 and newer) or <a href="#" data-file="Tensile-macos-x64.zip">Intel .zip</a>. macOS warns the first time you open a downloaded copy; see <a href="#install">Installing</a>.</p>
+        <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy command</button></div>
       </div>
       <div class="card" data-os="windows">
         <span class="tag">Your computer</span>
         <h3>Windows</h3>
         <p class="sub">Windows 10 and 11, 64-bit</p>
         <span class="file" data-file="Tensile-windows-x64-setup.exe">Tensile-windows-x64-setup.exe</span>
-        <a class="dl" data-file="Tensile-windows-x64-setup.exe" href="#">Download</a>
+        <a class="dl" data-file="Tensile-windows-x64-setup.exe" href="#">Download for Windows</a>
       </div>
       <div class="card" data-os="linux">
         <span class="tag">Your computer</span>
         <h3>Linux</h3>
         <p class="sub">64-bit, AppImage</p>
         <span class="file" data-file="Tensile-linux-x64.AppImage">Tensile-linux-x64.AppImage</span>
-        <a class="dl" data-file="Tensile-linux-x64.AppImage" href="#">Download</a>
+        <a class="dl" data-file="Tensile-linux-x64.AppImage" href="#">Download for Linux</a>
       </div>
     </div>
   </section>
@@ -480,8 +483,9 @@
       var text = b.parentNode.querySelector("code").textContent;
       if (!navigator.clipboard) return;
       navigator.clipboard.writeText(text).then(function () {
-        b.textContent = "Copied";
-        setTimeout(function () { b.textContent = "Copy"; }, 1500);
+        var label = b.dataset.label || (b.dataset.label = b.textContent);
+        b.textContent = "Copied"; b.classList.add("done");
+        setTimeout(function () { b.textContent = label; b.classList.remove("done"); }, 1500);
       });
     });
   });
