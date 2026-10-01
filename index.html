@@ -77,7 +77,8 @@
   .card.match .tag { display: block; }
   .card h3 { margin: 0; font-size: 16px; font-weight: 600; }
   .card .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
-  .card .file { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); word-break: break-all; }
+  .card .file { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); overflow-wrap: anywhere; }
+  .card .size { white-space: nowrap; }
   .card a.dl { display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; font-weight: 500; font-size: 14px; padding: 9px 12px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel-2); margin-top: 10px; }
   .card a.dl:hover { border-color: var(--accent); color: var(--accent); }
   .card a.dl svg { width: 14px; height: 14px; }
@@ -161,6 +162,7 @@
         <a class="dl" data-file="Tensile-linux-x64.AppImage" href="#">Download</a>
       </div>
     </div>
+    <p class="which"><strong>On a Mac?</strong> macOS warns the first time you open a downloaded copy, because Tensile is not yet notarized by Apple. See <a href="#install">Installing</a> for the two-minute fix, or use the Terminal command there to skip the warning entirely.</p>
     <p class="which"><strong>Which Mac do I have?</strong> Open the Apple menu, then About This Mac. If it says <strong>Chip: Apple M…</strong>, pick Apple chip. If it says <strong>Processor: … Intel</strong>, pick Intel chip.</p>
   </section>
 
@@ -174,15 +176,17 @@
     </div>
 
     <div class="panel" role="tabpanel" id="panel-mac" aria-labelledby="tab-mac">
-      <ol>
-        <li>Open the downloaded <code>.zip</code>. It unpacks to <strong>Tensile</strong>.</li>
-        <li>Drag <strong>Tensile</strong> into your <strong>Applications</strong> folder.</li>
-        <li>The first time only: right-click Tensile, choose <strong>Open</strong>, then <strong>Open</strong> again.</li>
-      </ol>
-      <p class="note">Tensile is not signed with an Apple developer certificate yet, so macOS asks before the first launch. If it says the app "can't be opened" or "is damaged", go to <strong>System Settings, Privacy &amp; Security</strong> and click <strong>Open Anyway</strong>, or run this once in Terminal:</p>
-      <div class="copyrow"><pre><code>xattr -dr com.apple.quarantine /Applications/Tensile.app</code></pre><button class="copy" type="button">Copy</button></div>
-      <p class="note">Or install with one Terminal command, which skips these prompts:</p>
+      <p><strong>Easiest: install from Terminal.</strong> Open the Terminal app, paste this and press Return. It picks the right version for your Mac and opens without any warning:</p>
       <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+      <p><strong>If you downloaded the .zip:</strong> Tensile is not yet notarized by Apple, so the first time you open it macOS says it "could not verify Tensile is free of malware". That is expected. To open it:</p>
+      <ol>
+        <li>Open the <code>.zip</code> and drag <strong>Tensile</strong> into <strong>Applications</strong>.</li>
+        <li>Double-click Tensile. When the warning appears, click <strong>Done</strong> (not Move to Bin).</li>
+        <li>Open <strong>System Settings</strong>, then <strong>Privacy &amp; Security</strong>. Scroll down to the message "Tensile was blocked" and click <strong>Open Anyway</strong>.</li>
+        <li>Enter your Mac password, then click <strong>Open Anyway</strong> once more. After this, Tensile opens normally.</li>
+      </ol>
+      <p class="note">Or skip steps 2 to 4 by running this once in Terminal after step 1:</p>
+      <div class="copyrow"><pre><code>xattr -dr com.apple.quarantine /Applications/Tensile.app</code></pre><button class="copy" type="button">Copy</button></div>
     </div>
 
     <div class="panel" role="tabpanel" id="panel-windows" aria-labelledby="tab-windows" hidden>
@@ -237,7 +241,11 @@
       (rel.assets || []).forEach(function (a) { sizes[a.name] = a.size; });
       document.querySelectorAll(".file[data-file]").forEach(function (el) {
         var s = sizes[el.dataset.file];
-        if (s) el.textContent = el.dataset.file + " · " + mb(s);
+        if (!s) return;
+        var span = document.createElement("span");
+        span.className = "size";
+        span.textContent = " · " + mb(s);
+        el.appendChild(span);
       });
     })
     .catch(function () {});

@@ -89,7 +89,12 @@ Install only the command-line tool with `curl -fsSL https://raw.githubuserconten
 
 Tensile is not code-signed yet, so your system asks once before opening it.
 
-- **macOS:** drag Tensile into Applications, then right-click it and choose **Open**. If macOS says the app can't be opened, go to **System Settings, Privacy & Security** and click **Open Anyway**. Installing with the terminal command above skips this.
+- **macOS:** the easiest way is the terminal command above, which opens without any warning. If you downloaded the `.zip`, macOS says it "could not verify Tensile is free of malware" the first time. That is expected for an app that is not yet notarized by Apple:
+  1. Drag Tensile into Applications and double-click it. When the warning appears, click **Done** (not Move to Bin).
+  2. Open **System Settings, Privacy & Security**, scroll to "Tensile was blocked" and click **Open Anyway**.
+  3. Enter your Mac password and click **Open Anyway** again. From then on it opens normally.
+
+  Or, after dragging it into Applications, run `xattr -dr com.apple.quarantine /Applications/Tensile.app` once in Terminal.
 - **Windows:** if you see "Windows protected your PC", click **More info**, then **Run anyway**.
 - **Linux:** make the file executable with `chmod +x Tensile-linux-x64.AppImage`, then run it.
 
