@@ -1,0 +1,498 @@
+{
+  "version": 1,
+  "id": "flow-blog-create-read-update-delete",
+  "name": "Blog: create, read, update, delete",
+  "nodes": [
+    {
+      "id": "start",
+      "name": "Start",
+      "x": 0.0,
+      "y": 0.0,
+      "kind": "start"
+    },
+    {
+      "id": "find-the-author",
+      "name": "Find the author",
+      "x": 300.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-find-the-author",
+        "name": "Find the author",
+        "method": "GET",
+        "url": "{{baseUrl}}/users/1",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "none"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "id"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "email"
+          }
+        ]
+      },
+      "extract": [
+        {
+          "variable": "authorId",
+          "source": "json",
+          "path": "id"
+        }
+      ]
+    },
+    {
+      "id": "their-posts",
+      "name": "Their posts",
+      "x": 600.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-their-posts",
+        "name": "Their posts",
+        "method": "GET",
+        "url": "{{baseUrl}}/posts",
+        "params": [
+          {
+            "key": "userId",
+            "value": "{{authorId}}",
+            "enabled": true
+          }
+        ],
+        "headers": [],
+        "body": {
+          "type": "none"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "0.id"
+          }
+        ]
+      },
+      "extract": [
+        {
+          "variable": "postId",
+          "source": "json",
+          "path": "0.id"
+        }
+      ]
+    },
+    {
+      "id": "read-the-post",
+      "name": "Read the post",
+      "x": 900.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-read-the-post",
+        "name": "Read the post",
+        "method": "GET",
+        "url": "{{baseUrl}}/posts/{{postId}}",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "none"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "title"
+          }
+        ]
+      },
+      "extract": []
+    },
+    {
+      "id": "its-comments",
+      "name": "Its comments",
+      "x": 900.0,
+      "y": 140.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-its-comments",
+        "name": "Its comments",
+        "method": "GET",
+        "url": "{{baseUrl}}/posts/{{postId}}/comments",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "none"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "0.email"
+          }
+        ]
+      },
+      "extract": []
+    },
+    {
+      "id": "write-a-new-post",
+      "name": "Write a new post",
+      "x": 1200.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-write-a-new-post",
+        "name": "Write a new post",
+        "method": "POST",
+        "url": "{{baseUrl}}/posts",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "json",
+          "content": "{\n  \"title\": \"Hello from Tensile\",\n  \"body\": \"Testing a workflow\",\n  \"userId\": \"{{authorId}}\"\n}"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "201"
+          },
+          {
+            "enabled": true,
+            "type": "json_exists",
+            "path": "id"
+          }
+        ]
+      },
+      "extract": []
+    },
+    {
+      "id": "edit-the-post",
+      "name": "Edit the post",
+      "x": 1500.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-edit-the-post",
+        "name": "Edit the post",
+        "method": "PUT",
+        "url": "{{baseUrl}}/posts/{{postId}}",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "json",
+          "content": "{\n  \"id\": \"{{postId}}\",\n  \"title\": \"Edited by Tensile\",\n  \"body\": \"Updated text\",\n  \"userId\": \"{{authorId}}\"\n}"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          },
+          {
+            "enabled": true,
+            "type": "json_equals",
+            "path": "title",
+            "value": "Edited by Tensile"
+          }
+        ]
+      },
+      "extract": []
+    },
+    {
+      "id": "delete-the-post",
+      "name": "Delete the post",
+      "x": 1800.0,
+      "y": 0.0,
+      "kind": "request",
+      "request": {
+        "version": 1,
+        "id": "step-delete-the-post",
+        "name": "Delete the post",
+        "method": "DELETE",
+        "url": "{{baseUrl}}/posts/{{postId}}",
+        "params": [],
+        "headers": [],
+        "body": {
+          "type": "none"
+        },
+        "auth": {
+          "type": "none"
+        },
+        "load": {
+          "connections": 10,
+          "duration_s": 10.0,
+          "rate": null,
+          "p95_ms": 250.0,
+          "max_error_rate": 0.01,
+          "start_rps": 10,
+          "max_rps": 10000,
+          "stage_s": 10.0,
+          "warmup_s": 3.0,
+          "profile": "fixed",
+          "criteria": [
+            {
+              "metric": "p95",
+              "op": "less_than",
+              "value": 500.0
+            },
+            {
+              "metric": "error_rate",
+              "op": "less_than",
+              "value": 1.0
+            }
+          ]
+        },
+        "assertions": [
+          {
+            "enabled": true,
+            "type": "status_is",
+            "value": "200"
+          }
+        ]
+      },
+      "extract": []
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "start",
+      "target": "find-the-author",
+      "when": "always"
+    },
+    {
+      "id": "e2",
+      "source": "find-the-author",
+      "target": "their-posts",
+      "when": "success"
+    },
+    {
+      "id": "e3",
+      "source": "their-posts",
+      "target": "read-the-post",
+      "when": "success"
+    },
+    {
+      "id": "e4",
+      "source": "their-posts",
+      "target": "its-comments",
+      "when": "success"
+    },
+    {
+      "id": "e5",
+      "source": "read-the-post",
+      "target": "write-a-new-post",
+      "when": "success"
+    },
+    {
+      "id": "e6",
+      "source": "write-a-new-post",
+      "target": "edit-the-post",
+      "when": "success"
+    },
+    {
+      "id": "e7",
+      "source": "edit-the-post",
+      "target": "delete-the-post",
+      "when": "success"
+    }
+  ],
+  "variables": [
+    {
+      "key": "baseUrl",
+      "value": "https://jsonplaceholder.typicode.com"
+    }
+  ]
+}

@@ -78,7 +78,7 @@ Chain requests into a user journey, such as sign in, open the dashboard, place a
 | Sample | What it does |
 | --- | --- |
 | [shop-sign-in-to-cart.flow.yaml](samples/shop-sign-in-to-cart.flow.yaml) | Sign in, profile, search products and carts in parallel, add to cart ([DummyJSON](https://dummyjson.com)) |
-| [blog-create-read-update-delete.flow.yaml](samples/blog-create-read-update-delete.flow.yaml) | Find an author, read posts and comments, then create, edit and delete a post ([JSONPlaceholder](https://jsonplaceholder.typicode.com)) |
+| [blog-create-read-update-delete.json](samples/blog-create-read-update-delete.json) (JSON; also as [.flow.yaml](samples/blog-create-read-update-delete.flow.yaml)) | Find an author, read posts and comments, then create, edit and delete a post ([JSONPlaceholder](https://jsonplaceholder.typicode.com)) |
 | [retry-after-failed-sign-in.flow.yaml](samples/retry-after-failed-sign-in.flow.yaml) | A sign-in that fails on purpose, an "on failure" wait, then a successful retry ([DummyJSON](https://dummyjson.com)) |
 
 ### History and comparison

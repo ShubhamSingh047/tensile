@@ -367,7 +367,7 @@
 
   <section id="samples">
     <h2>Try a workflow</h2>
-    <p class="samples-lead">Three ready-made workflows that run against free public practice APIs, so you can see a workflow working in under a minute. Needs Tensile 0.2.0 or newer.</p>
+    <p class="samples-lead">Three ready-made workflows, in YAML and JSON, that run against free public practice APIs, so you can see a workflow working in under a minute. Needs Tensile 0.2.0 or newer.</p>
     <ol class="samples-how">
       <li>Download a sample below.</li>
       <li>In Tensile, find <strong>Workflows</strong> in the sidebar and click <strong>Import</strong>.</li>
@@ -378,19 +378,19 @@
         <h3>Shop: sign in to cart</h3>
         <p class="sub">Signs in, saves the token, opens the profile, searches products and your carts at the same time, then adds the first phone to a cart. 6 steps.</p>
         <span class="file">DummyJSON &middot; shop-sign-in-to-cart.flow.yaml</span>
-        <a class="dl" href="samples/shop-sign-in-to-cart.flow.yaml" download>Download sample</a>
+        <a class="dl" href="samples/shop-sign-in-to-cart.flow.yaml" download>Download sample (YAML)</a>
       </div>
       <div class="card">
         <h3>Blog: create, read, update, delete</h3>
         <p class="sub">Finds an author, lists their posts, reads a post and its comments side by side, then writes, edits and deletes a post. 7 steps.</p>
-        <span class="file">JSONPlaceholder &middot; blog-create-read-update-delete.flow.yaml</span>
-        <a class="dl" href="samples/blog-create-read-update-delete.flow.yaml" download>Download sample</a>
+        <span class="file">JSONPlaceholder &middot; blog-create-read-update-delete.json &middot; also as <a href="samples/blog-create-read-update-delete.flow.yaml" download>.flow.yaml</a></span>
+        <a class="dl" href="samples/blog-create-read-update-delete.json" download>Download sample (JSON)</a>
       </div>
       <div class="card">
         <h3>Retry after a failed sign-in</h3>
         <p class="sub">Signs in with a wrong password on purpose, follows the "on failure" path to wait a moment, then signs in properly and carries on.</p>
         <span class="file">DummyJSON &middot; retry-after-failed-sign-in.flow.yaml</span>
-        <a class="dl" href="samples/retry-after-failed-sign-in.flow.yaml" download>Download sample</a>
+        <a class="dl" href="samples/retry-after-failed-sign-in.flow.yaml" download>Download sample (YAML)</a>
       </div>
     </div>
     <p class="note samples-note">These public services are shared by everyone, so use <strong>Run once</strong> with them, not Stress test. To stress-test a workflow, point its <code>baseUrl</code> at your own API.</p>
