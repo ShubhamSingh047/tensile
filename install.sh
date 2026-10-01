@@ -8,6 +8,7 @@
 #   --cli           install only the `tensile` command-line tool
 #   --version vX.Y  install that release instead of the latest
 #   --uninstall     remove what this script installed
+#   --no-open       do not open the app when the install finishes
 #   -h, --help      show this help
 #
 # What it does: downloads the release files from GitHub, checks them against the
@@ -26,6 +27,9 @@ BASE="${TENSILE_BASE_URL:-}"
 WANT_APP=1
 WANT_CLI=1
 UNINSTALL=0
+# Open the app once it is installed, unless asked not to or running on a CI machine.
+OPEN_APP=1
+[ -n "${TENSILE_NO_OPEN:-}${CI:-}" ] && OPEN_APP=0
 
 say() { printf '%s\n' "$*"; }
 die() { printf 'Error: %s\n' "$*" >&2; exit 1; }
@@ -42,6 +46,7 @@ Options (after `sh -s --`, e.g.  ... | sh -s -- --cli):
   --cli           install only the `tensile` command-line tool
   --version vX.Y  install that release instead of the latest
   --uninstall     remove what this script installed
+  --no-open       do not open the app when the install finishes
   -h, --help      show this help
 
 Installs into your own folders and never uses sudo:
@@ -58,6 +63,7 @@ while [ $# -gt 0 ]; do
     --cli) WANT_APP=0 ;;
     --version) shift; VERSION="${1:?--version needs a value, e.g. v0.1.0}" ;;
     --uninstall) UNINSTALL=1 ;;
+    --no-open) OPEN_APP=0 ;;
     -h|--help) usage; exit 0 ;;
     *) die "Unknown option: $1 (try --help)" ;;
   esac
@@ -205,6 +211,16 @@ if [ "$WANT_CLI" = 1 ]; then install_cli; fi
 
 say ""
 say "Done."
-if [ "$WANT_APP" = 1 ] && [ "$OS" = Darwin ]; then say "Open Tensile from your Applications folder, or run:  open \"$APP_DIR/Tensile.app\""; fi
+if [ "$WANT_APP" = 1 ] && [ "$OS" = Darwin ]; then say "Open Tensile any time from your Applications folder, or run:  open \"$APP_DIR/Tensile.app\""; fi
 if [ "$WANT_CLI" = 1 ]; then say "Try the command line:  tensile --help"; fi
 say "Uninstall any time with:  curl -fsSL https://raw.githubusercontent.com/$REPO/main/install.sh | sh -s -- --uninstall"
+
+if [ "$WANT_APP" = 1 ] && [ "$OPEN_APP" = 1 ]; then
+  if [ "$OS" = Darwin ]; then
+    say ""; say "Opening Tensile..."
+    open "$APP_DIR/Tensile.app" || say "Could not open it automatically; open Tensile from your Applications folder."
+  elif [ -n "${DISPLAY:-}${WAYLAND_DISPLAY:-}" ]; then
+    say ""; say "Opening Tensile..."
+    nohup "$APP_DIR/Tensile.AppImage" >/dev/null 2>&1 &
+  fi
+fi

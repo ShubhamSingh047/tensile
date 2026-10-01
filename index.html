@@ -270,7 +270,7 @@
         <p class="sub">Apple chip (M1 and newer) and Intel. The installer picks the right version for your Mac.</p>
         <ol class="steps">
           <li>Open <strong>Terminal</strong>: press Command-Space, type Terminal, press Return.</li>
-          <li>Paste this and press Return. Tensile opens without any warning.</li>
+          <li>Paste this and press Return. Tensile installs and opens, with no security warning.</li>
         </ol>
         <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
         <p class="alt">Prefer a file? <a href="#" data-file="Tensile-macos-arm64.zip">Apple chip .zip</a> (M1 and newer) or <a href="#" data-file="Tensile-macos-x64.zip">Intel .zip</a>. macOS warns the first time you open a downloaded copy; see <a href="#install">Installing</a>.</p>
@@ -302,7 +302,7 @@
     </div>
 
     <div class="panel" role="tabpanel" id="panel-mac" aria-labelledby="tab-mac">
-      <p><strong>Easiest: install from Terminal.</strong> Open the Terminal app, paste this and press Return. It picks the right version for your Mac and opens without any warning:</p>
+      <p><strong>Easiest: install from Terminal.</strong> Open the Terminal app, paste this and press Return. It picks the right version for your Mac, installs it, and opens Tensile, with no security warning:</p>
       <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
       <p class="note">It needs nothing extra (no Homebrew), never asks for your password, and installs Tensile into Applications plus the <code>tensile</code> command into <code>~/.local/bin</code>.</p>
       <p><strong>If you downloaded a .zip instead</strong>: Tensile is not yet notarized by Apple, so the first time you open it macOS says it "could not verify Tensile is free of malware". That is expected. To open it:</p>
@@ -390,7 +390,7 @@
     } else {
       btn.href = "#downloads";
       document.getElementById("primary-label").textContent = "Install for Mac";
-      document.getElementById("primary-hint").textContent = "One Terminal command, no warnings";
+      document.getElementById("primary-hint").textContent = "One Terminal command installs and opens it";
     }
   }
   function showTab(name) {

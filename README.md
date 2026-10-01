@@ -20,7 +20,7 @@ Open **Terminal** (press Command-Space, type Terminal, press Return), paste this
 curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh
 ```
 
-It picks the right version for your Mac, installs Tensile into Applications and the `tensile` command-line tool into `~/.local/bin`, and opens without any security warning. It needs nothing extra (no Homebrew), verifies every file against the release's `SHA256SUMS`, and never asks for your password. [Read the script](install.sh) first if you like. The same command works on Linux.
+It picks the right version for your Mac, installs Tensile into Applications and the `tensile` command-line tool into `~/.local/bin`, then opens Tensile, with no security warning. Add `-s -- --no-open` after `sh` to install without opening it. It needs nothing extra (no Homebrew), verifies every file against the release's `SHA256SUMS`, and never asks for your password. [Read the script](install.sh) first if you like. The same command works on Linux.
 
 Prefer a file? [Apple chip .zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-arm64.zip) (M1 and newer) or [Intel .zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-x64.zip). macOS warns the first time you open a downloaded copy; see [First launch](#first-launch).
 
