@@ -67,6 +67,20 @@ Tensile raises the traffic step by step until your limits are crossed, then narr
 
 Connect to an MCP server over HTTP or as a local command, list its tools and call them. Tensile checks tool descriptions for hidden instructions aimed at the AI, looks for exposed credentials, and can load-test tool calls. A built-in practice server lets you try it with one click.
 
+### Workflows
+
+![A workflow on the canvas: sign in, create an order, then get it on success or back off on failure](assets/shots/workflow.png)
+
+Chain requests into a user journey, such as sign in, open the dashboard, place an order. Each step can save a value (a token, an order number) for the steps after it, and steps can run in order, at the same time, or only on success or failure of another. Run a workflow once to check it, or stress-test the whole journey. Workflows are short `.flow.yaml` files you can edit by hand and keep in git.
+
+**Try one:** download a sample, then in Tensile click **Import** under Workflows in the sidebar and press **Run once**. They use free public practice APIs, so please don't stress-test them. Needs Tensile 0.2.0 or newer.
+
+| Sample | What it does |
+| --- | --- |
+| [shop-sign-in-to-cart.flow.yaml](samples/shop-sign-in-to-cart.flow.yaml) | Sign in, profile, search products and carts in parallel, add to cart ([DummyJSON](https://dummyjson.com)) |
+| [blog-create-read-update-delete.flow.yaml](samples/blog-create-read-update-delete.flow.yaml) | Find an author, read posts and comments, then create, edit and delete a post ([JSONPlaceholder](https://jsonplaceholder.typicode.com)) |
+| [retry-after-failed-sign-in.flow.yaml](samples/retry-after-failed-sign-in.flow.yaml) | A sign-in that fails on purpose, an "on failure" wait, then a successful retry ([DummyJSON](https://dummyjson.com)) |
+
 ### History and comparison
 
 Every request and load test is saved. Pick two runs to compare every metric side by side, with changes marked better, worse or unchanged.

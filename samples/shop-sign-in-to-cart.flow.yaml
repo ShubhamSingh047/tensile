@@ -1,0 +1,47 @@
+# Tensile sample workflow: sign in, look around, add to cart.
+# Runs against DummyJSON (https://dummyjson.com), a free public practice API.
+# In Tensile: Workflows > Import, pick this file, then press Run.
+# Please use Run, not Stress test: this is a shared public service.
+name: "Shop: sign in, browse, add to cart"
+vars:
+  baseUrl: https://dummyjson.com
+  username: emilys
+  password: emilyspass
+defaults:
+  auth: bearer {{token}}
+  expect: { status: 2xx, time-under: 3000ms }
+
+steps:
+  - name: Sign in
+    POST: /auth/login
+    body: { username: "{{username}}", password: "{{password}}", expiresInMins: 30 }
+    auth: none
+    expect: { status: 200, json: { accessToken: exists } }
+    save: { token: accessToken, userId: id }
+
+  - name: My profile
+    GET: /auth/me
+    expect: { status: 200, json: { username: emilys } }
+
+  - parallel:
+      - name: Search phones
+        GET: /products/search
+        query: { q: phone, limit: 5 }
+        auth: none
+        expect: { status: 200, json: { products.0.id: exists } }
+        save: { productId: products.0.id }
+      - name: My carts
+        GET: /carts/user/{{userId}}
+        expect: { status: 200, json: { carts: exists } }
+
+  - name: Product details
+    GET: /products/{{productId}}
+    after: Search phones
+    auth: none
+    expect: { status: 200, json: { id: exists, price: exists } }
+
+  - name: Add to cart
+    POST: /carts/add
+    body: { userId: "{{userId}}", products: [{ id: "{{productId}}", quantity: 2 }] }
+    expect: { status: 201, json: { totalProducts: 1 } }
+    save: { cartId: id }

@@ -1,0 +1,37 @@
+# Tensile sample workflow: what happens when a step fails.
+# The first sign-in uses a wrong password on purpose. Instead of stopping,
+# the workflow waits, then signs in with the right password and carries on.
+# Runs against DummyJSON (https://dummyjson.com), a free public practice API.
+# In Tensile: Workflows > Import, pick this file, then press Run.
+# Please use Run, not Stress test: this is a shared public service.
+name: "Retry after a failed sign-in"
+vars:
+  baseUrl: https://dummyjson.com
+  username: emilys
+  password: emilyspass
+defaults:
+  auth: bearer {{token}}
+  expect: { status: 200, time-under: 3000ms }
+
+steps:
+  - name: Sign in (wrong password)
+    POST: /auth/login
+    body: { username: "{{username}}", password: not-the-password }
+    auth: none
+    # This step fails on purpose (the API answers 400), which sends the run to "Wait a moment".
+    on-failure: Wait a moment
+
+  - name: Wait a moment
+    wait: 1s
+
+  - name: Sign in again
+    POST: /auth/login
+    after: Wait a moment
+    body: { username: "{{username}}", password: "{{password}}" }
+    auth: none
+    expect: { status: 200, json: { accessToken: exists } }
+    save: { token: accessToken }
+
+  - name: My profile
+    GET: /auth/me
+    expect: { status: 200, json: { username: emilys } }

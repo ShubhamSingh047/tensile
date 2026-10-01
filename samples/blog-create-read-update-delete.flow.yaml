@@ -1,0 +1,45 @@
+# Tensile sample workflow: create, read, update and delete blog posts.
+# Runs against JSONPlaceholder (https://jsonplaceholder.typicode.com), a free
+# fake REST API: writes are accepted and answered but not really stored.
+# In Tensile: Workflows > Import, pick this file, then press Run.
+# Please use Run, not Stress test: this is a shared public service.
+name: "Blog: create, read, update, delete"
+vars:
+  baseUrl: https://jsonplaceholder.typicode.com
+defaults:
+  expect: { status: 200, header: { content-type: application/json }, time-under: 3000ms }
+
+steps:
+  - name: Find the author
+    GET: /users/1
+    expect: { status: 200, json: { id: exists, email: exists } }
+    save: { authorId: id }
+
+  - name: Their posts
+    GET: /posts
+    query: { userId: "{{authorId}}" }
+    expect: { status: 200, json: { 0.id: exists } }
+    save: { postId: 0.id }
+
+  - parallel:
+      - name: Read the post
+        GET: /posts/{{postId}}
+        expect: { status: 200, json: { title: exists } }
+      - name: Its comments
+        GET: /posts/{{postId}}/comments
+        expect: { status: 200, json: { 0.email: exists } }
+
+  - name: Write a new post
+    POST: /posts
+    after: Read the post
+    body: { title: Hello from Tensile, body: Testing a workflow, userId: "{{authorId}}" }
+    expect: { status: 201, json: { id: exists } }
+
+  - name: Edit the post
+    PUT: /posts/{{postId}}
+    body: { id: "{{postId}}", title: Edited by Tensile, body: Updated text, userId: "{{authorId}}" }
+    expect: { status: 200, json: { title: Edited by Tensile } }
+
+  - name: Delete the post
+    DELETE: /posts/{{postId}}
+    expect: { status: 200 }

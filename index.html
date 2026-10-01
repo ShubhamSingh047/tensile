@@ -96,6 +96,11 @@
   .step ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 14.5px; }
   .step li { margin: 4px 0; }
   .step strong { color: var(--fg); font-weight: 500; }
+  .samples-lead { margin: 0 0 12px; color: var(--muted); max-width: 46em; }
+  .samples-how { margin: 0 0 18px; padding-left: 20px; font-size: 14.5px; }
+  .samples-how li { margin: 3px 0; }
+  @media (min-width: 980px) { .cards.samples { grid-template-columns: repeat(3, 1fr); } }
+  .samples-note { margin-top: 14px; }
   .demo-note { margin-top: 40px; font-size: 13px; color: var(--muted); }
 
   section { padding: 36px 0; }
@@ -257,6 +262,25 @@
         </div>
       </div>
 
+      <div class="step full">
+        <div class="text">
+          <div class="lead">
+            <span class="num">STEP 6</span>
+            <h3>Chain requests into a workflow</h3>
+            <p>Real users don't send one request. They sign in, open a page, then place an order. Draw that journey on a canvas, run it once to check it, then stress-test the whole thing.</p>
+          </div>
+          <ul>
+            <li>Each step can <strong>save</strong> a value, such as a sign-in token or an order number, for the steps after it.</li>
+            <li>Steps run in order, <strong>at the same time</strong>, or only <strong>on success</strong> or <strong>on failure</strong> of another.</li>
+            <li>Workflows are short text files you can edit by hand, share and keep in git. <a href="#samples">Try a sample</a>.</li>
+          </ul>
+        </div>
+        <div>
+          <figure class="frame wide" style="margin:0"><div class="scroll"><img src="assets/shots/workflow.png" width="2058" height="984" loading="lazy" alt="A workflow on the canvas: Start, then Login, then Create order, which leads to Get order on success or a Back off wait on failure. Below, 3 of 3 steps passed, saving authToken and orderId"></div></figure>
+          <p class="swipe">Swipe to see the whole screen.</p>
+        </div>
+      </div>
+
     </div>
     <p class="demo-note">Screenshots use Tensile's built-in demo data. Everything runs on your own computer; there is no account and nothing is sent anywhere else.</p>
   </section>
@@ -339,6 +363,37 @@
       <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh -s -- --cli</code></pre><button class="copy" type="button">Copy</button></div>
       <p class="note">On Windows, download <a href="#" data-file="tensile-windows-x64.zip">tensile-windows-x64.zip</a> and put <code>tensile.exe</code> on your PATH. Every file is listed with its checksum on the <a href="https://github.com/ShubhamSingh047/tensile/releases/latest">release page</a>.</p>
     </div>
+  </section>
+
+  <section id="samples">
+    <h2>Try a workflow</h2>
+    <p class="samples-lead">Three ready-made workflows that run against free public practice APIs, so you can see a workflow working in under a minute. Needs Tensile 0.2.0 or newer.</p>
+    <ol class="samples-how">
+      <li>Download a sample below.</li>
+      <li>In Tensile, find <strong>Workflows</strong> in the sidebar and click <strong>Import</strong>.</li>
+      <li>Pick the file, then press <strong>Run once</strong>.</li>
+    </ol>
+    <div class="cards samples">
+      <div class="card">
+        <h3>Shop: sign in to cart</h3>
+        <p class="sub">Signs in, saves the token, opens the profile, searches products and your carts at the same time, then adds the first phone to a cart. 6 steps.</p>
+        <span class="file">DummyJSON &middot; shop-sign-in-to-cart.flow.yaml</span>
+        <a class="dl" href="samples/shop-sign-in-to-cart.flow.yaml" download>Download sample</a>
+      </div>
+      <div class="card">
+        <h3>Blog: create, read, update, delete</h3>
+        <p class="sub">Finds an author, lists their posts, reads a post and its comments side by side, then writes, edits and deletes a post. 7 steps.</p>
+        <span class="file">JSONPlaceholder &middot; blog-create-read-update-delete.flow.yaml</span>
+        <a class="dl" href="samples/blog-create-read-update-delete.flow.yaml" download>Download sample</a>
+      </div>
+      <div class="card">
+        <h3>Retry after a failed sign-in</h3>
+        <p class="sub">Signs in with a wrong password on purpose, follows the "on failure" path to wait a moment, then signs in properly and carries on.</p>
+        <span class="file">DummyJSON &middot; retry-after-failed-sign-in.flow.yaml</span>
+        <a class="dl" href="samples/retry-after-failed-sign-in.flow.yaml" download>Download sample</a>
+      </div>
+    </div>
+    <p class="note samples-note">These public services are shared by everyone, so use <strong>Run once</strong> with them, not Stress test. To stress-test a workflow, point its <code>baseUrl</code> at your own API.</p>
   </section>
 
   <footer>
