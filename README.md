@@ -12,22 +12,24 @@ Everything runs on your own computer. There is no account, no cloud service, and
 
 ## Download
 
-| System | File |
-| --- | --- |
-| Mac with Apple chip (M1 and newer) | [Tensile-macos-arm64.zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-arm64.zip) |
-| Mac with Intel chip | [Tensile-macos-x64.zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-x64.zip) |
-| Windows 10 and 11, 64-bit | [Tensile-windows-x64-setup.exe](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-windows-x64-setup.exe) |
-| Linux, 64-bit (AppImage) | [Tensile-linux-x64.AppImage](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-linux-x64.AppImage) |
+### macOS (Apple chip and Intel)
 
-Not sure which Mac you have? Open the Apple menu, then **About This Mac**. "Chip: Apple M…" means Apple chip; "Processor: … Intel" means Intel.
-
-On macOS and Linux you can also install from the terminal:
+Open **Terminal** (press Command-Space, type Terminal, press Return), paste this and press Return:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh
 ```
 
-The script installs the app and the `tensile` command-line tool, verifies every file against the release's `SHA256SUMS`, and never uses `sudo`. [Read it first](install.sh) if you like.
+It picks the right version for your Mac, installs Tensile into Applications and the `tensile` command-line tool into `~/.local/bin`, and opens without any security warning. It needs nothing extra (no Homebrew), verifies every file against the release's `SHA256SUMS`, and never asks for your password. [Read the script](install.sh) first if you like. The same command works on Linux.
+
+Prefer a file? [Apple chip .zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-arm64.zip) (M1 and newer) or [Intel .zip](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-macos-x64.zip). macOS warns the first time you open a downloaded copy; see [First launch](#first-launch).
+
+### Windows and Linux
+
+| System | File |
+| --- | --- |
+| Windows 10 and 11, 64-bit | [Tensile-windows-x64-setup.exe](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-windows-x64-setup.exe) |
+| Linux, 64-bit (AppImage) | [Tensile-linux-x64.AppImage](https://github.com/ShubhamSingh047/tensile/releases/latest/download/Tensile-linux-x64.AppImage) |
 
 ## What you can do with it
 
@@ -89,7 +91,7 @@ Install only the command-line tool with `curl -fsSL https://raw.githubuserconten
 
 Tensile is not code-signed yet, so your system asks once before opening it.
 
-- **macOS:** the easiest way is the terminal command above, which opens without any warning. If you downloaded the `.zip`, macOS says it "could not verify Tensile is free of malware" the first time. That is expected for an app that is not yet notarized by Apple:
+- **macOS:** installing with the Terminal command above shows no warning. If you downloaded the `.zip` instead, macOS says it "could not verify Tensile is free of malware" the first time. That is expected for an app that is not yet notarized by Apple:
   1. Drag Tensile into Applications and double-click it. When the warning appears, click **Done** (not Move to Bin).
   2. Open **System Settings, Privacy & Security**, scroll to "Tensile was blocked" and click **Open Anyway**.
   3. Enter your Mac password and click **Open Anyway** again. From then on it opens normally.

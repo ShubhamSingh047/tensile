@@ -71,7 +71,7 @@
   .cards { display: grid; gap: 12px; grid-template-columns: 1fr; }
   @media (min-width: 620px) { .cards { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 980px) { .cards { grid-template-columns: repeat(4, 1fr); } }
-  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .card { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px; display: flex; flex-direction: column; gap: 4px; position: relative; }
   .card.match { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
   .card .tag { position: absolute; top: -10px; left: 14px; background: var(--accent); color: var(--accent-fg); font: 500 11px var(--mono); padding: 2px 7px; border-radius: 2px; display: none; }
   .card.match .tag { display: block; }
@@ -79,6 +79,14 @@
   .card .sub { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
   .card .file { font: 12px var(--mono); color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); overflow-wrap: anywhere; }
   .card .size { white-space: nowrap; }
+  .card.mac { grid-column: 1 / -1; }
+  @media (min-width: 980px) { .card.mac { grid-column: span 2; } }
+  .card.mac .copyrow { margin-top: 6px; }
+  .card.mac .copyrow pre { font-size: 12px; }
+  .steps { margin: 0 0 4px; padding-left: 20px; font-size: 14px; }
+  .steps li { margin: 4px 0; }
+  .card .alt { font-size: 13px; color: var(--muted); margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--line); }
+  .card .alt a { color: var(--fg); }
   .card a.dl { display: inline-flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; font-weight: 500; font-size: 14px; padding: 9px 12px; border-radius: 3px; border: 1px solid var(--line); background: var(--panel-2); margin-top: 10px; }
   .card a.dl:hover { border-color: var(--accent); color: var(--accent); }
   .card a.dl svg { width: 14px; height: 14px; }
@@ -98,7 +106,7 @@
   .note { color: var(--muted); font-size: 13.5px; }
   pre { margin: 8px 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px; padding: 10px 12px; overflow-x: auto; font: 12.5px/1.5 var(--mono); }
   .copyrow { display: flex; gap: 8px; align-items: stretch; }
-  .copyrow pre { flex: 1; margin: 0; }
+  .copyrow pre { flex: 1; margin: 0; min-width: 0; }
   .copy { font: 500 12px var(--mono); border: 1px solid var(--line); background: var(--panel); color: var(--fg); border-radius: 3px; padding: 0 12px; cursor: pointer; }
   .copy:hover { border-color: var(--accent); }
 
@@ -133,19 +141,16 @@
   <section id="downloads">
     <h2>Downloads</h2>
     <div class="cards">
-      <div class="card" data-os="mac-arm">
+      <div class="card mac" data-os="mac">
         <span class="tag">Your computer</span>
-        <h3>Mac with Apple chip</h3>
-        <p class="sub">M1, M2, M3, M4 and newer</p>
-        <span class="file" data-file="Tensile-macos-arm64.zip">Tensile-macos-arm64.zip</span>
-        <a class="dl" data-file="Tensile-macos-arm64.zip" href="#">Download</a>
-      </div>
-      <div class="card" data-os="mac-intel">
-        <span class="tag">Your computer</span>
-        <h3>Mac with Intel chip</h3>
-        <p class="sub">Older Macs with an Intel processor</p>
-        <span class="file" data-file="Tensile-macos-x64.zip">Tensile-macos-x64.zip</span>
-        <a class="dl" data-file="Tensile-macos-x64.zip" href="#">Download</a>
+        <h3>macOS</h3>
+        <p class="sub">Apple chip (M1 and newer) and Intel. The installer picks the right version for your Mac.</p>
+        <ol class="steps">
+          <li>Open <strong>Terminal</strong>: press Command-Space, type Terminal, press Return.</li>
+          <li>Paste this and press Return. Tensile opens without any warning.</li>
+        </ol>
+        <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
+        <p class="alt">Prefer a file? <a href="#" data-file="Tensile-macos-arm64.zip">Apple chip .zip</a> (M1 and newer) or <a href="#" data-file="Tensile-macos-x64.zip">Intel .zip</a>. macOS warns the first time you open a downloaded copy; see <a href="#install">Installing</a>.</p>
       </div>
       <div class="card" data-os="windows">
         <span class="tag">Your computer</span>
@@ -162,8 +167,6 @@
         <a class="dl" data-file="Tensile-linux-x64.AppImage" href="#">Download</a>
       </div>
     </div>
-    <p class="which"><strong>On a Mac?</strong> macOS warns the first time you open a downloaded copy, because Tensile is not yet notarized by Apple. See <a href="#install">Installing</a> for the two-minute fix, or use the Terminal command there to skip the warning entirely.</p>
-    <p class="which"><strong>Which Mac do I have?</strong> Open the Apple menu, then About This Mac. If it says <strong>Chip: Apple M…</strong>, pick Apple chip. If it says <strong>Processor: … Intel</strong>, pick Intel chip.</p>
   </section>
 
   <section id="install">
@@ -178,7 +181,8 @@
     <div class="panel" role="tabpanel" id="panel-mac" aria-labelledby="tab-mac">
       <p><strong>Easiest: install from Terminal.</strong> Open the Terminal app, paste this and press Return. It picks the right version for your Mac and opens without any warning:</p>
       <div class="copyrow"><pre><code>curl -fsSL https://raw.githubusercontent.com/ShubhamSingh047/tensile/main/install.sh | sh</code></pre><button class="copy" type="button">Copy</button></div>
-      <p><strong>If you downloaded the .zip:</strong> Tensile is not yet notarized by Apple, so the first time you open it macOS says it "could not verify Tensile is free of malware". That is expected. To open it:</p>
+      <p class="note">It needs nothing extra (no Homebrew), never asks for your password, and installs Tensile into Applications plus the <code>tensile</code> command into <code>~/.local/bin</code>.</p>
+      <p><strong>If you downloaded a .zip instead</strong>: Tensile is not yet notarized by Apple, so the first time you open it macOS says it "could not verify Tensile is free of malware". That is expected. To open it:</p>
       <ol>
         <li>Open the <code>.zip</code> and drag <strong>Tensile</strong> into <strong>Applications</strong>.</li>
         <li>Double-click Tensile. When the warning appears, click <strong>Done</strong> (not Move to Bin).</li>
@@ -250,16 +254,21 @@
     })
     .catch(function () {});
 
-  // Pick the visitor's platform. Browsers don't reliably say which Mac chip is inside,
-  // so only Chromium's architecture hint is trusted; otherwise both Mac cards stay equal.
+  // Highlight the visitor's platform. On a Mac the installer picks the chip itself.
   function mark(os) {
     var card = document.querySelector('.card[data-os="' + os + '"]');
     if (!card) return;
     card.classList.add("match");
-    var a = card.querySelector("a.dl");
-    document.getElementById("primary-btn").href = a.href;
-    document.getElementById("primary-label").textContent = "Download for " + card.querySelector("h3").textContent;
-    document.getElementById("primary-hint").textContent = card.querySelector(".file").dataset.file;
+    var btn = document.getElementById("primary-btn"), a = card.querySelector("a.dl");
+    if (a) {
+      btn.href = a.href;
+      document.getElementById("primary-label").textContent = "Download for " + card.querySelector("h3").textContent;
+      document.getElementById("primary-hint").textContent = card.querySelector(".file").dataset.file;
+    } else {
+      btn.href = "#downloads";
+      document.getElementById("primary-label").textContent = "Install for Mac";
+      document.getElementById("primary-hint").textContent = "One Terminal command, no warnings";
+    }
   }
   function showTab(name) {
     document.querySelectorAll(".tab").forEach(function (t) {
@@ -274,18 +283,7 @@
   var isMac = /Mac/i.test(plat) && !/iPhone|iPad/i.test(ua) && navigator.maxTouchPoints < 2;
   if (/Win/i.test(plat)) { mark("windows"); showTab("windows"); }
   else if (/Linux/i.test(plat) && !/Android/i.test(ua)) { mark("linux"); showTab("linux"); }
-  else if (isMac) {
-    showTab("mac");
-    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-      navigator.userAgentData.getHighEntropyValues(["architecture"]).then(function (h) {
-        if (h.architecture === "arm") mark("mac-arm");
-        else if (h.architecture === "x86") mark("mac-intel");
-        else document.getElementById("primary-hint").textContent = "Pick Apple chip or Intel chip below";
-      }).catch(function () {});
-    } else {
-      document.getElementById("primary-hint").textContent = "Pick Apple chip or Intel chip below";
-    }
-  }
+  else if (isMac) { mark("mac"); showTab("mac"); }
 
   // Tabs: click and arrow keys.
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
