@@ -2,7 +2,7 @@
 
 **Find the traffic where your API breaks, and why.**
 
-Tensile is a desktop app for testing APIs. Send requests the way you would in Postman, then put them under load: simulate many users at once, watch response times and errors live, and find the exact request rate where your server stops coping. It also tests MCP servers, the tool servers that AI assistants connect to.
+Tensile is a desktop app for testing APIs. Send requests to your API, then put them under load: simulate many users at once, watch response times and errors live, and find the exact request rate where your server stops coping. It also tests MCP servers, the tool servers that AI assistants connect to.
 
 Everything runs on your own computer. There is no account, no cloud service, and your requests and results never leave your machine.
 
